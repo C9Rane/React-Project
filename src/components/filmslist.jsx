@@ -18,11 +18,11 @@ export default class FilmsList extends Component{
         fetch("https://studioghibliapi-d6fc8.web.app/films")
         .then((response) => {
             console.log(response);
-            response.json();
+            return response.json();
         })
         .then((films) => {
             console.log(films)
-            this.setState({films})
+            this.setState({list: films})
             console.log(this.state);
         })
         .catch((err) => console.error(err))
@@ -31,7 +31,6 @@ export default class FilmsList extends Component{
     
 
     componentDidMount() {
-        console.log("App - Mount");
         this.getFilms()
     }
 

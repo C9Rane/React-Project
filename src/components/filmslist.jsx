@@ -1,46 +1,42 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
+import "./filmslist.css";
 
-export default class FilmsList extends Component{
-
-    constructor() {
-        super();
-        this.state = {
-            list: []
-        }
-        this.handleChange = this.handleChange.bind(this);
-    }
+export default function FilmsList(props) {
+    const [list, setList] = useState([]);
   
-    handleChange(e){
-      this.setState({text: e.target.value});
+    const handleChange = (e) => {
+      setList(e.target.value);
     }
     
-    getFilms(){
+    const getFilms = () => {
         fetch("https://studioghibliapi-d6fc8.web.app/films")
-        .then((response) => {
+          .then((response) => {
             console.log(response);
             return response.json();
-        })
-        .then((films) => {
+          })
+          .then((films) => {
             console.log(films)
-            this.setState({list: films})
-            console.log(this.state);
-        })
-        .catch((err) => console.error(err))
-        console.log(this.state.list);
-    }
-    
-
-    componentDidMount() {
-        this.getFilms()
+            setList(films);
+            console.log(list);
+          })
+          .catch((err) => console.error(err));
+        console.log(list);
     }
 
-    render() {
-      return (
+    useEffect(() => {
+        getFilms();
+    }, []);
+
+    return (
         <ul>
-            {this.state.list.map((film) => {
-            return <li key={film.id}>{film.title}</li>;
-            })}
+          {list.map((film) => (
+            <li key={film.id}>
+              <h2>{film.title}</h2>
+              <p>{film.release_date}</p>
+              <p>Critics: {film.rt_score}%</p>
+              <img src={film.image} alt={film.title + " banner"} />
+            </li>
+          ))}
         </ul>
       );
-    }
-  }
+}
